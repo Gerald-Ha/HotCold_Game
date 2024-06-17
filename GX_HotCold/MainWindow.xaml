@@ -1,0 +1,35 @@
+﻿<Window x:Class="GX_HotCold.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="GX_HotCold" Height="600" Width="800" Background="#333333">
+    <Window.Resources>
+        <Style x:Key="GameButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="80" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Background" Value="Teal" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="100" />
+
+            <ColumnDefinition Width="400" />
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Versuche übrig" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="20" Margin="10" Foreground="White" />
+        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="RemainingTries" Text="20" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Background="White" Margin="10" Foreground="Black" Width="30" TextAlignment="Center" />
+        <!-- Warm Kalt breite -->
+        <TextBlock Grid.Row="0" Grid.Column="2" x:Name="Display" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" Background="White" Margin="10" Foreground="Black" Width="105" TextAlignment="Center" />
+
+        <UniformGrid Grid.Row="1" Grid.ColumnSpan="3" Rows="10" Columns="10" Margin="5" x:Name="ButtonGrid">
+        </UniformGrid>
+    </Grid>
+</Window>

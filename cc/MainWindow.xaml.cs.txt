@@ -1,0 +1,108 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+
+namespace GX_HotCold
+{
+    public partial class MainWindow : Window
+    {
+        private int remainingTries = 2;
+        private int targetIndex;
+        private Random random = new Random();
+        private const int GridSize = 10;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            StartNewGame();
+        }
+
+        private void StartNewGame()
+        {
+            remainingTries = 2;
+            RemainingTries.Text = remainingTries.ToString();
+            Display.Text = "";
+            targetIndex = random.Next(100);
+
+            // Erstelle das Grid neu, um sicherzustellen, dass alle Zustände zurückgesetzt sind
+            ButtonGrid.Children.Clear();
+            for (int i = 0; i < GridSize * GridSize; i++)
+            {
+                Button button = new Button
+                {
+                    Name = $"Button{i}",
+                    Style = (Style)FindResource("GameButtonStyle"),
+                    Tag = i
+                };
+                button.Click += Cell_Click;
+                ButtonGrid.Children.Add(button);
+            }
+        }
+
+        private void Cell_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                int index = (int)button.Tag;
+                int distance = Math.Abs(index % GridSize - targetIndex % GridSize) + Math.Abs(index / GridSize - targetIndex / GridSize);
+
+                if (index == targetIndex)
+                {
+                    button.Background = Brushes.White;
+                    button.Content = new Image { Source = new BitmapImage(new Uri("pack://application:,,,/img/win.png", UriKind.RelativeOrAbsolute)) };
+                    ShowWinWindow();
+                }
+                else
+                {
+                    button.Background = Brushes.Red;
+                    remainingTries--;
+                    RemainingTries.Text = remainingTries.ToString();
+
+                    if (distance >= 5)
+                    {
+                        Display.Text = "Kalt";
+                    }
+                    else if (distance >= 3)
+                    {
+                        Display.Text = "Warm";
+                    }
+                    else
+                    {
+                        Display.Text = "Sehr Warm";
+                    }
+
+                    if (remainingTries == 0)
+                    {
+                        EndGame("You Lose!");
+                    }
+
+                    button.IsEnabled = false;
+                }
+            }
+        }
+
+        private void ShowWinWindow()
+        {
+            WinWindow winWindow = new WinWindow();
+            winWindow.Owner = this;
+            winWindow.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            winWindow.ShowDialog();
+            StartNewGame();
+        }
+
+        private void EndGame(string message)
+        {
+            MessageBoxResult result = MessageBox.Show($"{message}\nWeiterspielen?", "Spiel beendet", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                StartNewGame();
+            }
+            else
+            {
+                Application.Current.Shutdown();
+            }
+        }
+    }
+}
